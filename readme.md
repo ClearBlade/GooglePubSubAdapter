@@ -7,10 +7,10 @@ As currently written, the __GooglePubSubAdapter__ adapter
 The adapter subscribes to MQTT topics which are used to interact with the xDot. The adapter publishes any data retrieved from the xDot to MQTT topics so that the ClearBlade Platform is able to retrieve and process xDot related data or write data to xDot devices.
 
 # MQTT Topic Structure
-The __GooglePubSubAdapter__ adapter utilizes MQTT messaging to communicate with the ClearBlade Platform. The __GooglePubSubAdapter__ adapter will subscribe to a specific topic in order to handle xDot device requests. Additionally, the xDot adapter will publish messages to MQTT topics in order to communicate the results of requests to client applications. The topic structures utilized by the xDot adapter are as follows:
+The __GooglePubSubAdapter__ adapter utilizes MQTT messaging to communicate with the ClearBlade Platform. The __GooglePubSubAdapter__ adapter will subscribe to a specific topic in order to handle requests from the ClearBlade Platform/Edge to publish data to Cloud Pub/Sub. Additionally, the __GooglePubSubAdapter__ adapter will publish messages to MQTT topics in order to provide the ClearBlade Platform/Edge with data received from a Cloud Pub/Sub topic subscription. The topic structures utilized by the xDot adapter are as follows:
 
-  * Read xDot data request: {__TOPIC ROOT__}/receive/request
-  * Read xDot data response: {__TOPIC ROOT__}/receive/response
+  * Publish data to Cloud Pub/Sub: {__TOPIC ROOT__}/publish
+  * Send Cloud Pub/Sub subscription data to Clearblade: {__TOPIC ROOT__}/receive/response
   * Write xDot data request: {__TOPIC ROOT__}/send/request
 
 
@@ -33,27 +33,25 @@ Once a System has been created, artifacts must be defined within the ClearBlade 
 The adapter_settings column will need to contain a JSON object containing the following attributes:
 
 ##### gcpProjectID
-* 4 bytes of hex data using a colon (:) to separate each byte from the next byte
-* __Must be identical on all xDots in order for peer-to-peer mode to function__
+* The ID of the GCP Project to connect to
 
 ##### gcpCredsPath
-* 16 bytes of hex data using a colon (:) to separate each byte from the next byte
-* __Must be identical on all xDots in order for peer-to-peer mode to function__
+* The path to the json credential file used to authenticate with the Google Cloud Platform
 
 ##### gcpPubTopic
-* 16 bytes of hex data using a colon (:) to separate each byte from the next byte
-* __Must be identical on all xDots in order for peer-to-peer mode to function__
+* The GCP Cloud PubSub topic the adapter should publish data to
+* Optional, omit from settings object if you will not be publishing data to GCP Cloud Pub Sub
 
 ##### gcpSubTopic
-* The full unix path to the xDot serial device (ex. /dev/ttyAP1)
+* The GCP Cloud PubSub topic the adapter should subscribe to
+* Optional, omit from settings object if you will not be subscribing to any GCP Cloud Pub Sub topic
 
 ##### gcpPullInterval
-* DR0-DR15 can be used
-* See https://www.multitech.com/documents/publications/manuals/s000643.pdf for further information
+* The number of seconds to wait between each attempt to pull data from GCP Cloud Pub Sub
 
 ##### gcpSubPreCreated
-* The transmit frequency to use in peer-to-peer mode
-* Use 915.5-919.7 MhZ for US 915 devices to avoid interference with LoRaWAN networks
+* Boolean value that indicates whether or not the GCP Pub Sub subscription was pre-created in GCP
+* If false, the adapter will attempt to create a subscription on GCP. This requires pubsub.editor permissions on GCP
 
 #### adapter_settings_example
 {
@@ -127,9 +125,9 @@ The __GooglePubSubAdapter__ adapter is dependent upon the ClearBlade Go SDK and 
 In order to compile the adapter for execution, the following steps need to be performed:
 
  1. Retrieve the adapter source code  
-    * ```git clone git@github.com:ClearBlade/xDot-Adapter.git```
+    * ```git clone git@github.com:ClearBlade/GooglePubSubAdapter.git```
  2. Navigate to the xdotadapter directory  
-    * ```cd xdotadapter```
+    * ```cd GooglePubSubAdapter```
  3. ```git clone https://github.com/ClearBlade/Go-SDK.git```
     * This command should be executed from within your Go workspace
  3. ```go get -u cloud.google.com/go/pubsub```

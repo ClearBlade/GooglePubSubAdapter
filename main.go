@@ -1,17 +1,5 @@
 package main
 
-// Config options
-//
-//	project-id
-//	credentials file path
-//	google sub topic
-//	sub pull interval
-//	google pub topic
-//
-//
-//
-//
-
 import (
 	"context"
 	"encoding/json"
