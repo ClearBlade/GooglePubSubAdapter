@@ -2,25 +2,21 @@
 
 The __GooglePubSubAdapter__ adapter provides the ability for the ClearBlade platform to communicate with a the PubSub functionality within the Google Cloud Platform. 
 
-As currently written, the __GooglePubSubAdapter__ adapter 
-
-The adapter subscribes to MQTT topics which are used to interact with the xDot. The adapter publishes any data retrieved from the xDot to MQTT topics so that the ClearBlade Platform is able to retrieve and process xDot related data or write data to xDot devices.
-
 # MQTT Topic Structure
-The __GooglePubSubAdapter__ adapter utilizes MQTT messaging to communicate with the ClearBlade Platform. The __GooglePubSubAdapter__ adapter will subscribe to a specific topic in order to handle requests from the ClearBlade Platform/Edge to publish data to Cloud Pub/Sub. Additionally, the __GooglePubSubAdapter__ adapter will publish messages to MQTT topics in order to provide the ClearBlade Platform/Edge with data received from a Cloud Pub/Sub topic subscription. The topic structures utilized by the xDot adapter are as follows:
+The __GooglePubSubAdapter__ adapter utilizes MQTT messaging to communicate with the ClearBlade Platform. The __GooglePubSubAdapter__ adapter will subscribe to a specific topic in order to handle requests from the ClearBlade Platform/Edge to publish data to Cloud Pub/Sub. Additionally, the __GooglePubSubAdapter__ adapter will publish messages to MQTT topics in order to provide the ClearBlade Platform/Edge with data received from a Cloud Pub/Sub topic subscription. The topic structures utilized by the __GooglePubSubAdapter__ adapter are as follows:
 
   * Publish data to Cloud Pub/Sub: {__TOPIC ROOT__}/publish
   * Send Cloud Pub/Sub subscription data to Clearblade: {__TOPIC ROOT__}/receive/response
-  * Write xDot data request: {__TOPIC ROOT__}/send/request
+  * Adapter error conditions encountered: {__TOPIC ROOT__}/error
 
 
 ## ClearBlade Platform Dependencies
-The xDot adapter was constructed to provide the ability to communicate with a _System_ defined in a ClearBlade Platform instance. Therefore, the adapter requires a _System_ to have been created within a ClearBlade Platform instance.
+The __GooglePubSubAdapter__ adapter was constructed to provide the ability to communicate with a _System_ defined in a ClearBlade Platform instance. Therefore, the adapter requires a _System_ to have been created within a ClearBlade Platform instance.
 
 Once a System has been created, artifacts must be defined within the ClearBlade Platform system to allow the adapters to function properly. At a minimum: 
 
-  * A device needs to be created in the Auth --> Devices collection. The device will represent the adapter, or more importantly, the xDot device or MultiTech Conduit gateway on which the adapter is executing. The _name_ and _active key_ values specified in the Auth --> Devices collection will be used by the adapter to authenticate to the ClearBlade Platform or ClearBlade Edge. 
-  * An adapter configuration data collection needs to be created in the ClearBlade Platform _system_ and populated with the data appropriate to the xDot adapter. The schema of the data collection should be as follows:
+  * A device needs to be created in the Auth --> Devices collection. The device will represent the adapter account. The _name_ and _active key_ values specified in the Auth --> Devices collection will be used by the adapter to authenticate to the ClearBlade Platform or ClearBlade Edge. 
+  * An adapter configuration data collection needs to be created in the ClearBlade Platform _system_ and populated with the data appropriate to the __GooglePubSubAdapter__ adapter. The schema of the data collection should be as follows:
 
 
 | Column Name      | Column Datatype |
