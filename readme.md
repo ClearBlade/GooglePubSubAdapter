@@ -122,12 +122,13 @@ In order to compile the adapter for execution, the following steps need to be pe
 
  1. Retrieve the adapter source code  
     * ```git clone git@github.com:ClearBlade/GooglePubSubAdapter.git```
- 2. Navigate to the xdotadapter directory  
+ 2. Navigate to the __GooglePubSubAdapter__ directory  
     * ```cd GooglePubSubAdapter```
- 3. ```git clone https://github.com/ClearBlade/Go-SDK.git```
+ 3. ```go get -u github.com/ClearBlade/Go-SDK.git```
     * This command should be executed from within your Go workspace
- 3. ```go get -u cloud.google.com/go/pubsub```
- 4. Compile the adapter
+ 4. ```go get -u cloud.google.com/go/pubsub```
+    * This command should be executed from within your Go workspace
+ 5. Compile the adapter
     * ```go build```
 
 
