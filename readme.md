@@ -61,53 +61,69 @@ The adapter_settings column will need to contain a JSON object containing the fo
 
 ## Usage
 
+### Environment Variables
+The Google PubSub Adapter is dependant upon certain environment variables prior to attempting to execute the adapter. The environment variables that need to be created are as follows:
+
+  __CB_SYSTEM_KEY__
+  * Optional, if no environment variable is created, use the _systemKey_ command line flag
+  
+  __CB_SYSTEM_SECRET__
+  * Optional, if no environment variable is created, use the _systemSecret_ command line flag
+
+  __CB_SERVICE_ACCOUNT__
+  * REQUIRED
+  * The name of the device defined within the ClearBlade Platform or ClearBlade Edge representing the adapter
+
+  __CB_SERVICE_ACCOUNT_TOKEN__
+  * REQUIRED
+  * The authentication token of the device defined within the ClearBlade Platform or ClearBlade Edge representing the adapter
+
+Environment variables can be created on Linux based systems by executing the following command from a terminal prompt:
+`export [variable_name]=[variable_value]`
+
+_example_
+`export CB_SERVICE_ACCOUNT=My_Device_Name`
+`export CB_SERVICE_ACCOUNT_TOKEN=MyDeviceToken`
+
+
 ### Executing the adapter
 
-`GooglePubSubAdapter -systemKey=<SYSTEM_KEY> -systemSecret=<SYSTEM_SECRET> -platformURL=<PLATFORM_URL> -messagingURL=<MESSAGING_URL> -deviceName=<DEVICE_NAME> -password=<DEVICE_ACTIVE_KEY> -adapterConfigCollectionID=<COLLECTION_ID> -logLevel=<LOG_LEVEL>`
+`GooglePubSubAdapter -systemKey=<SYSTEM_KEY> -systemSecret=<SYSTEM_SECRET> -platformURL=<PLATFORM_URL> -messagingURL=<MESSAGING_URL> -adapterConfigCollection=<COLLECTION_NAME> -logLevel=<LOG_LEVEL>`
 
    __*Where*__ 
 
    __systemKey__
-  * REQUIRED
+  * OPTIONAL
+  * Can be set up as an environment variable with the name CB_SYSTEM_KEY
   * The system key of the ClearBLade Platform __System__ the adapter will connect to
 
    __systemSecret__
-  * REQUIRED
-  * The system secret of the ClearBLade Platform __System__ the adapter will connect to
-   
-   __deviceName__
-  * The device name the adapter will use to authenticate to the ClearBlade Platform
-  * Requires the device to have been defined in the _Auth - Devices_ collection within the ClearBlade Platform __System__
   * OPTIONAL
-  * Defaults to __gcpPubSubAdapter__
-   
-   __password__
-  * REQUIRED
-  * The active key the adapter will use to authenticate to the platform
-  * Requires the device to have been defined in the _Auth - Devices_ collection within the ClearBlade Platform __System__
-   
-   __platformUrl__
+  * Can be set up as an environment variable with the name CB_SYSTEM_SECRET
+  * The system secret of the ClearBLade Platform __System__ the adapter will connect to
+         
+   __platformURL__
   * The url of the ClearBlade Platform instance the adapter will connect to
   * OPTIONAL
   * Defaults to __http://localhost:9000__
 
-   __messagingUrl__
+   __messagingURL__
   * The MQTT url of the ClearBlade Platform instance the adapter will connect to
   * OPTIONAL
   * Defaults to __localhost:1883__
 
-   __adapterConfigCollectionID__
-  * REQUIRED 
-  * The collection ID of the data collection used to house adapter configuration data
+   __adapterConfigCollection__
+  * The name of the data collection used to house adapter configuration data
+  * OPTIONAL 
+  * Defaults to __adapter_config__
 
    __logLevel__
   * The level of runtime logging the adapter should provide.
   * Available log levels:
-    * fatal
-    * error
-    * warn
-    * info
-    * debug
+    * FATAL
+    * ERROR
+    * INFO
+    * DEBUG
   * OPTIONAL
   * Defaults to __info__
 
