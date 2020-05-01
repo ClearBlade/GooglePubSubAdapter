@@ -42,10 +42,8 @@ var (
 	gcpSubPreCreated = false
 
 	//Miscellaneous adapter variables
-	topicRoot          = "gcp/pubsub"
-	cbSubscribeChannel <-chan *mqttTypes.Publish
-	endWorkersChannel  chan string
-	interruptChannel   chan os.Signal
+	endWorkersChannel chan string
+	interruptChannel  chan os.Signal
 )
 
 func init() {
@@ -164,12 +162,13 @@ func gcpPull() {
 	err := gcpSubscription.Receive(context.Background(), func(ctx context.Context, m *pubsub.Message) {
 		log.Printf("[DEBUG] gcpPull - Google PubSub message received: %v\n", m)
 
-		adapter_library.Publish(topicRoot, m.Data)
+		adapter_library.Publish(adapterConfig.TopicRoot, m.Data)
+		log.Printf("[INFO] gcpPullWorker - Published message to platform: %s\n", string(m.Data))
 		m.Ack()
 	})
 	if err != context.Canceled {
 		log.Printf("[ERROR] gcpPull - Error receiving Google PubSub messages: %s\n", err.Error())
-		adapter_library.Publish(topicRoot+"/error", []byte(err.Error()))
+		adapter_library.Publish(adapterConfig.TopicRoot+"/error", []byte(err.Error()))
 	}
 }
 
@@ -262,7 +261,7 @@ func googleAuthExplicit(projectID string, jsonPath string) {
 func cbMessageHandler(message *mqttTypes.Publish) {
 	// process incoming MQTT messages as needed here
 	//Ensure a publish request was received
-	if strings.HasSuffix(message.Topic.Whole, topicRoot+"/publish") {
+	if strings.HasSuffix(message.Topic.Whole, adapterConfig.TopicRoot+"/publish") {
 		log.Println("[INFO] cbMessageHandler - Handling GCP publish request...")
 		gcpPublish(gcpPubTopic, string(message.Payload))
 	} else {
